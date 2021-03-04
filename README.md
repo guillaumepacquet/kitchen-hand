@@ -1,4 +1,4 @@
-# stf-office
+# Kitchen hand
 
 ## Project setup
 ```
