@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Recipe from '@/views/Recipe.vue';
 import { auth } from '../firebase';
 
 Vue.use(VueRouter);
@@ -25,6 +26,15 @@ const routes: Array<RouteConfig> = [
         name: 'Register',
         component: Register
     },
+    {
+        path: '/recipe/:id',
+        name: 'Recipe',
+        component: Recipe,
+        props: true,
+        meta: {
+            requiresAuth: true
+        }
+    }
 ];
 
 const router = new VueRouter({

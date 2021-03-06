@@ -26,7 +26,7 @@
                             <v-list-item
                                 :key="i"
                             >
-                                <v-list-item-content>
+                                <v-list-item-content @click="onRecipeClick(recipe.id)">
                                     <v-list-item-title v-text="recipe.name" />
                                 </v-list-item-content>
                             </v-list-item>
@@ -63,11 +63,14 @@ export default Vue.extend({
     },
     methods: {
         async addRecipe() {
-            const recipe = new Recipe(this.name);
+            const recipe = new Recipe(null, this.name);
 
             await this.$store.dispatch('recipe/add', recipe);
 
             this.name = '';
+        },
+        onRecipeClick(recipeId: string) {
+            this.$router.push('/recipe/' + recipeId);
         }
     }
 });

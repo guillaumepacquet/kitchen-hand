@@ -1,7 +1,8 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { recipeConverter } from './core/model/recipe';
+import { recipeConverter } from '@/core/model/recipe';
+import { ingredientConverter } from '@/core/model/ingredient';
 
 const firebaseConfig = {
     apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -25,11 +26,23 @@ const users = function () {
     return db.collection('users');
 };
 
-const recipes = function (user: string) {
+const user = function (user: string) {
+    return users().doc(user);
+};
+
+const recipes = function (userId: string) {
+    return user(userId)
+        .collection('recipes')
+        .withConverter(recipeConverter);
+};
+
+const ingredients = function (user: string, recipe: string) {
     return db.collection('users')
         .doc(user)
         .collection('recipes')
-        .withConverter(recipeConverter);
+        .doc(recipe)
+        .collection('ingredients')
+        .withConverter(ingredientConverter);
 };
 
 // export utils/refs
@@ -38,5 +51,6 @@ export {
     auth,
     users,
     recipes,
+    ingredients,
     usersCollection
 };

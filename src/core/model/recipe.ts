@@ -1,13 +1,20 @@
+type NullableString = string | null;
 
 export default class Recipe {
+    private _id: NullableString;
     private _name: string;
 
-    constructor(name: string) {
+    constructor(id: NullableString, name: string) {
+        this._id = id;
         this._name = name;
     }
 
     get name() {
         return this._name;
+    }
+
+    get id() {
+        return this._id;
     }
 }
 
@@ -22,7 +29,8 @@ export const recipeConverter = {
     },
     fromFirestore: function (snapshot: snapshot) {
         const data = snapshot.data();
+        console.log(data);
 
-        return new Recipe(data.name);
+        return new Recipe(snapshot.id, data.name);
     }
 };
