@@ -5,7 +5,7 @@
             color="primary"
             dark
         >
-            <span class="mr-2">Project 0</span>
+            <span class="mr-2">KitchenHand</span>
             <v-spacer />
             <v-btn
                 @click="logout"
