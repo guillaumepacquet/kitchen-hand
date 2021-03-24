@@ -29,6 +29,14 @@
                                 <v-list-item-content @click="onRecipeClick(recipe.id)">
                                     <v-list-item-title v-text="recipe.name" />
                                 </v-list-item-content>
+                                <v-list-item-action>
+                                    <v-btn
+                                        icon
+                                        @click="onDelete(recipe.id)"
+                                    >
+                                        <v-icon color="grey lighten-1">mdi-delete</v-icon>
+                                    </v-btn>
+                                </v-list-item-action>
                             </v-list-item>
                         </template>
                     </v-list-item-group>
@@ -71,6 +79,9 @@ export default Vue.extend({
         },
         onRecipeClick(recipeId: string) {
             this.$router.push('/recipe/' + recipeId);
+        },
+        async onDelete(recipeId: string) {
+            await this.$store.dispatch('recipe/delete', recipeId);
         }
     }
 });

@@ -28,6 +28,11 @@ const user: Module<RecipeState, RootState> = {
                 .doc()
                 .set(recipe);
         },
+        async delete(store, recipe: string) {
+            const userId = store.rootGetters['user/userId'];
+
+            await fb.recipes(userId).doc(recipe).delete();
+        },
         async get({ commit, rootGetters }) {
             const userId = rootGetters['user/userId'];
 

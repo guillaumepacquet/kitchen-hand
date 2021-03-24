@@ -29,7 +29,6 @@ export const recipeConverter = {
     },
     fromFirestore: function (snapshot: snapshot) {
         const data = snapshot.data();
-        console.log(data);
 
         return new Recipe(snapshot.id, data.name);
     }
