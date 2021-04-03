@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import { recipeConverter } from '@/core/model/recipe';
 import { ingredientConverter } from '@/core/model/ingredient';
+import { shoppingItemConverter } from './core/model/shopping-item';
 
 const firebaseConfig = {
     apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -36,6 +37,12 @@ const recipes = function (userId: string) {
         .withConverter(recipeConverter);
 };
 
+const shoppingItem = function (userId: string) {
+    return user(userId)
+        .collection('shoppingItems')
+        .withConverter(shoppingItemConverter);
+};
+
 const ingredients = function (user: string, recipe: string) {
     return db.collection('users')
         .doc(user)
@@ -51,6 +58,7 @@ export {
     auth,
     users,
     recipes,
+    shoppingItem,
     ingredients,
     usersCollection
 };

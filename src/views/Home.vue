@@ -34,7 +34,9 @@
                                         icon
                                         @click="onDelete(recipe.id)"
                                     >
-                                        <v-icon color="grey lighten-1">mdi-delete</v-icon>
+                                        <v-icon color="grey lighten-1">
+                                            mdi-delete
+                                        </v-icon>
                                     </v-btn>
                                 </v-list-item-action>
                             </v-list-item>

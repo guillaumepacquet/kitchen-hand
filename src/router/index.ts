@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+import Home from '@/views/Home.vue';
+import ShoppingList from '@/views/Shopping-list.vue';
+import Login from '@/views/Login.vue';
+import Register from '@/views/Register.vue';
 import Recipe from '@/views/Recipe.vue';
-import { auth } from '../firebase';
+import { auth } from '@/firebase';
 
 Vue.use(VueRouter);
 
@@ -13,6 +14,14 @@ const routes: Array<RouteConfig> = [
         path: '/',
         name: 'Home',
         component: Home,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/shopping-list',
+        name: 'ShoppingList',
+        component: ShoppingList,
         meta: {
             requiresAuth: true
         }
@@ -34,7 +43,7 @@ const routes: Array<RouteConfig> = [
         meta: {
             requiresAuth: true
         }
-    }
+    },
 ];
 
 const router = new VueRouter({
