@@ -61,8 +61,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import * as fb from '@/firebase';
 import Ingredient from '@/core/model/ingredient';
+import { QueryBuilder } from '@/core/firestore/query-builder';
+import User from '@/core/model/user';
+import Recipe from '@/core/model/recipe';
 
 export default Vue.extend({
     name: 'IngredientDialog',
@@ -120,7 +122,12 @@ export default Vue.extend({
         async onSave() {
             const ingredient = new Ingredient(null, this.name, this.quantity, this.unit);
 
-            await fb.ingredients(this.$store.getters['user/userId'], this.recipeId).doc().set(ingredient);
+            const query = await (new QueryBuilder(new Ingredient(null, '', '', '')))
+                .fromDocument(new User(this.$store.getters['user/userId'], ''))
+                .fromDocument(new Recipe(this.recipeId, ''))
+                .getQuery();
+
+            await query.doc().set(ingredient);
 
             this.ingredientForm = false;
         }

@@ -54,7 +54,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Recipe from '@/core/model/recipe';
-import * as fb from '@/firebase';
+import User from '@/core/model/user';
+import {QueryBuilder} from '@/core/firestore/query-builder';
 import ingredientDialog from '@/components/ingredient-dialog.vue';
 import Ingredient from '@/core/model/ingredient';
 
@@ -77,8 +78,25 @@ export default Vue.extend({
         }
     },
     async created () {
-        this.listerners.push(fb.recipes(this.$store.getters['user/userId']).doc(this.id).onSnapshot(this.updateRecipe));
-        this.listerners.push(fb.ingredients(this.$store.getters['user/userId'], this.id).onSnapshot(this.updateIngredients));
+        const reciepQuery = await (new QueryBuilder(new Recipe(null, ''))).fromDocument(new User(this.$store.getters['user/userId'], ''))
+            .getQuery();
+
+        const recipeListener = reciepQuery
+            .doc(this.id)
+            .onSnapshot(this.updateRecipe)
+        ;
+            
+        this.listerners.push(recipeListener);
+
+        const ingredientQuery = await (new QueryBuilder(new Ingredient(null, '', '', '')))
+            .fromDocument(new User(this.$store.getters['user/userId'], ''))
+            .fromDocument(new Recipe(this.id, ''))
+            .getQuery();
+
+        const ingredientListener = ingredientQuery
+            .onSnapshot(this.updateIngredients);
+
+        this.listerners.push(ingredientListener);
     },
     beforeDestroy() {
         this.listerners.forEach(unsubscribe => {

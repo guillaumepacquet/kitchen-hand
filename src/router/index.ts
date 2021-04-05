@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import Home from '@/views/Home.vue';
 import ShoppingList from '@/views/Shopping-list.vue';
+import RandomWheel from '@/views/Random-wheel.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
 import Recipe from '@/views/Recipe.vue';
@@ -22,6 +23,13 @@ const routes: Array<RouteConfig> = [
         path: '/shopping-list',
         name: 'ShoppingList',
         component: ShoppingList,
+        meta: {
+            requiresAuth: true
+        }
+    }, {
+        path: '/random-wheel',
+        name: 'RandomWheel',
+        component: RandomWheel,
         meta: {
             requiresAuth: true
         }

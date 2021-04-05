@@ -1,10 +1,10 @@
-type NullableString = string | null;
+import { FirestoreData, FirestoreDocumentId, Snapshot } from '@/core/firestore/type';
 
-export default class Recipe {
-    private _id: NullableString;
+export default class Recipe implements FirestoreData<Recipe> {
+    _id: FirestoreDocumentId;
     private _name: string;
 
-    constructor(id: NullableString, name: string) {
+    constructor(id: FirestoreDocumentId, name: string) {
         this._id = id;
         this._name = name;
     }
@@ -16,20 +16,16 @@ export default class Recipe {
     get id() {
         return this._id;
     }
-}
 
-type snapshot = firebase.default.firestore.QueryDocumentSnapshot;
-
-
-export const recipeConverter = {
-    toFirestore: function (recipe: Recipe) {
+    toFirestore(recipe: Recipe) {
         return {
             name: recipe.name,
         };
-    },
-    fromFirestore: function (snapshot: snapshot) {
+    }
+
+    fromFirestore(snapshot: Snapshot) {
         const data = snapshot.data();
 
         return new Recipe(snapshot.id, data.name);
     }
-};
+}

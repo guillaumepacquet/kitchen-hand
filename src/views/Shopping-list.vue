@@ -82,11 +82,9 @@ export default Vue.extend({
     },
     created () {
         this.$store.dispatch('shoppingList/listen');
-        this.$store.dispatch('recipe/listen');
     },
     beforeDestroy () {
         this.$store.dispatch('shoppingList/stopListening');
-        this.$store.dispatch('recipe/stopListening');
     },
     computed: {
         ...mapGetters('shoppingList', ['shoppingItems']),

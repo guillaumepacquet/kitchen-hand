@@ -62,9 +62,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import * as fb from '@/firebase';
-import { mapGetters } from 'vuex';
+import useRicepe from '@/mixins/recipable';
 import ShoppingItem from '@/core/model/shopping-item';
+import Ingredient from '@/core/model/ingredient';
+import { QueryBuilder } from '@/core/firestore/query-builder';
+import User from '@/core/model/user';
+import Recipe from '@/core/model/recipe';
 
 export default Vue.extend({
     name: 'RecipeDialog',
@@ -80,6 +83,7 @@ export default Vue.extend({
             selected: [] as string[],
         }
     },
+    mixins: [useRicepe],
     watch: {
         value(newValue) {
             this.ingredientForm = newValue;
@@ -92,19 +96,21 @@ export default Vue.extend({
             }
         }
     },
-    computed: {
-        ...mapGetters('recipe', ['recipes'])
-    },
     methods: {
         onAddIngredients() {
             this.ingredientForm = true;
         },
         async onSave() {
             this.selected.forEach(async recipeId => {
-                const snapshot = await fb.ingredients(this.$store.getters['user/userId'], recipeId).get();
+                const query = await (new QueryBuilder(new Ingredient(null, '', '', '')))
+                    .fromDocument(new User(this.$store.getters['user/userId'], ''))
+                    .fromDocument(new Recipe(recipeId, ''))
+                    .getQuery();
+                    
+
+                const snapshot = await query.get();
 
                 snapshot.forEach(item => {
-
                     this.$store.dispatch('shoppingList/add', new ShoppingItem(
                         null,
                         item.data().name,

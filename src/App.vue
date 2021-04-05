@@ -43,7 +43,10 @@
                     </v-list-item-icon>
                     <v-list-item-title>Shopping list</v-list-item-title>
                 </v-list-item>
-                <v-list-item link>
+                <v-list-item
+                    link
+                    to="/random-wheel"
+                >
                     <v-list-item-icon>
                         <v-icon>mdi-ferris-wheel</v-icon>
                     </v-list-item-icon>

@@ -1,5 +1,6 @@
 import ShoppingItem from '@/core/model/shopping-item';
-import * as fb from '@/firebase';
+import User from '@/core/model/user';
+import { QueryBuilder } from '@/core/firestore/query-builder';
 import { Module } from 'vuex';
 import { RootState } from '.';
 
@@ -43,7 +44,12 @@ const user: Module<ShoppingListState, RootState> = {
     actions: {
         async add(store, item: ShoppingItem) {
             const userId = store.rootGetters['user/userId'];
-            const docRef = await fb.shoppingItem(userId).add(item);
+            const query = await (new QueryBuilder(new ShoppingItem(null, '', 0, '')))
+                .fromDocument(new User(userId, ''))
+                .getQuery();
+
+
+            const docRef = await query.add(item);
             item.id = docRef.id;
         },
         delete(store, itemName: string) {
@@ -51,7 +57,11 @@ const user: Module<ShoppingListState, RootState> = {
 
             store.state.shoppingItems.forEach(async item => {
                 if (itemName === item.name && item.id !== null) {
-                    await fb.shoppingItem(userId).doc(item.id).delete();
+
+                    const query = await (new QueryBuilder(new ShoppingItem(null, '', 0, '')))
+                        .fromDocument(new User(userId, ''))
+                        .getQuery();
+                    await query.doc(item.id).delete();
                 }
             });
         },
@@ -60,12 +70,19 @@ const user: Module<ShoppingListState, RootState> = {
 
             store.state.shoppingItems.forEach(async item => {
                 if (shoppingItem.name === item.name && item.id !== null) {
-                    await fb.shoppingItem(userId).doc(item.id).update({ isDone: shoppingItem.isDone });
+                    const query = await (new QueryBuilder(new ShoppingItem(null, '', 0, '')))
+                        .fromDocument(new User(userId, ''))
+                        .getQuery();
+                    await query.doc(item.id).update({ isDone: shoppingItem.isDone });
                 }
             });
         },
-        listen({ commit, rootGetters }) {
-            const unsubscribe = fb.shoppingItem(rootGetters['user/userId']).onSnapshot((shoppingItemsSnapshot) => {
+        async listen({ commit, rootGetters }) {
+            const query = await (new QueryBuilder(new ShoppingItem(null, '', 0, '')))
+                .fromDocument(new User(rootGetters['user/userId'], ''))
+                .getQuery();
+
+            const unsubscribe = query.onSnapshot((shoppingItemsSnapshot) => {
                 if (shoppingItemsSnapshot) {
                     const shoppingItems: ShoppingItem[] = [];
                     shoppingItemsSnapshot.forEach(shoppingItem => {

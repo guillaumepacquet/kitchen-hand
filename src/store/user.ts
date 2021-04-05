@@ -1,3 +1,5 @@
+import User from '@/core/model/user';
+import { QueryBuilder } from '@/core/firestore/query-builder';
 import * as fb from '@/firebase';
 import router from '@/router/index';
 import { Module } from 'vuex';
@@ -34,9 +36,9 @@ const user: Module<UserState, RootState> = {
                 throw 'empty user';
             }
 
-            await fb.usersCollection.doc(user.uid).set({
-                email: credentials.email,
-            });
+            const usermodel = new User(null, credentials.email);
+            const query = await (new QueryBuilder(usermodel)).getQuery();
+            await query.doc(user.uid).set(usermodel);
 
             dispatch('fetchUserProfile', user);
 
@@ -61,7 +63,8 @@ const user: Module<UserState, RootState> = {
             router.push('/');
         },
         async fetchUserProfile({ commit }, user) {
-            const userProfile = await fb.usersCollection.doc(user.uid).get();
+            const query = await (new QueryBuilder(new User(null, ''))).getQuery();
+            const userProfile = await query.doc(user.uid).get();
 
             commit('USER_LOGGED', userProfile.data());
         }
