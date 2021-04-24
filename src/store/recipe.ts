@@ -1,8 +1,7 @@
 import Recipe from '@/core/model/recipe';
-import User from '@/core/model/user';
-import { QueryBuilder } from '@/core/firestore/query-builder';
 import { Module } from 'vuex';
 import { RootState } from '.';
+import recipeRepository from '@/core/repository/recipe-repository';
 
 
 export interface RecipeState {
@@ -27,31 +26,17 @@ const user: Module<RecipeState, RootState> = {
         async add(store, recipe: Recipe) {
             const userId = store.rootGetters['user/userId'];
 
-            const query = await (new QueryBuilder(new Recipe(null, '')))
-                .fromDocument(new User(userId, ''))
-                .getQuery();
-
-            await query.doc().set(recipe);
+            await recipeRepository.saveForUser(userId, recipe);
         },
         async delete(store, recipe: string) {
             const userId = store.rootGetters['user/userId'];
 
-
-            const query = await (new QueryBuilder(new Recipe(null, '')))
-                .fromDocument(new User(userId, ''))
-                .getQuery();
-
-            await query.doc(recipe).delete();
+            await recipeRepository.deleteForUser(userId, recipe);
         },
         async get({ commit, rootGetters }) {
             const userId = rootGetters['user/userId'];
 
-            const query = await (new QueryBuilder(new Recipe(null, '')))
-                .fromDocument(new User(userId, ''))
-                .getQuery();
-
-            const snapshot = await query.get();
-
+            const snapshot = await recipeRepository.getAllFromUser(userId);
 
             snapshot.forEach(doc => {
                 commit('ADD', doc.data());
@@ -63,11 +48,7 @@ const user: Module<RecipeState, RootState> = {
                 return;
             }
 
-            const query = await (new QueryBuilder(new Recipe(null, '')))
-                .fromDocument(new User(rootGetters['user/userId'], ''))
-                .getQuery();
-
-            const unsubscribe = query.onSnapshot((recipesSnapshot) => {
+            const unsubscribe = await recipeRepository.listenAllForUser(rootGetters['user/userId'], (recipesSnapshot) => {
                 if (recipesSnapshot) {
                     const recipes: Recipe[] = [];
                     recipesSnapshot.forEach(recipe => {
