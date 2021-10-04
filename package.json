@@ -6,9 +6,11 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "test:unit": "vue-cli-service test:unit",
-        "test:e2e": "vue-cli-service test:e2e",
+        "e2e:open": "cypress open",
         "lint": "vue-cli-service lint",
-        "deploy": "yarn build && firebase deploy"
+        "deploy": "yarn build && firebase deploy",
+        "emulators": "firebase emulators:start --only auth,firestore",
+        "test:emulate": "cross-env FIREBASE_AUTH_EMULATOR_HOST=\"localhost:$(cat firebase.json | jq .emulators.auth.port)\" FIRESTORE_EMULATOR_HOST=\"localhost:$(cat firebase.json | jq .emulators.firestore.port)\" yarn e2e:open"
     },
     "dependencies": {
         "@babel/polyfill": "^7.4.4",
@@ -23,11 +25,11 @@
         "vuex": "^3.6.2"
     },
     "devDependencies": {
+        "@cypress/webpack-preprocessor": "^5.7.0",
         "@types/jest": "^24.0.19",
         "@typescript-eslint/eslint-plugin": "^2.33.0",
         "@typescript-eslint/parser": "^2.33.0",
         "@vue/cli-plugin-babel": "~4.5.0",
-        "@vue/cli-plugin-e2e-cypress": "~4.5.0",
         "@vue/cli-plugin-eslint": "~4.5.0",
         "@vue/cli-plugin-pwa": "~4.5.0",
         "@vue/cli-plugin-router": "~4.5.0",
@@ -36,8 +38,13 @@
         "@vue/cli-service": "~4.5.0",
         "@vue/eslint-config-typescript": "^5.0.2",
         "@vue/test-utils": "^1.0.3",
+        "cross-env": "^7.0.3",
+        "cypress": "^7.5.0",
+        "cypress-firebase": "^1.8.0",
         "eslint": "^6.7.2",
+        "eslint-plugin-cypress": "^2.11.3",
         "eslint-plugin-vue": "^6.2.2",
+        "firebase-admin": "^9.6.0",
         "sass": "^1.26.5",
         "sass-loader": "^8.0.2",
         "typescript": "~3.9.3",

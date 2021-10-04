@@ -13,9 +13,13 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+firebase.firestore().settings({ experimentalForceLongPolling: true });
+
 // utils
 const db = firebase.firestore();
+db.useEmulator('localhost', 9080);
 const auth = firebase.auth();
+auth.useEmulator('http://localhost:9099/');
 
 // export utils/refs
 export {

@@ -13,7 +13,11 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
     {
         path: '/',
-        name: 'Home',
+        redirect: { name: 'Recipes' }
+    },
+    {
+        path: '/recipes',
+        name: 'Recipes',
         component: Home,
         meta: {
             requiresAuth: true

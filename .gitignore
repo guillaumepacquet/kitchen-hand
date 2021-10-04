@@ -25,4 +25,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+#firebase
 .firebase
+firebase-*.log
+firestore-*.log
+ui-*.log
+serviceAccount.json

@@ -32,3 +32,8 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+todo
+make cypress work firebase emulator
+https://www.benmvp.com/blog/end-to-end-testing-firebase-emulator-github-actions/
